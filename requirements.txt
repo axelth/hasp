@@ -9,6 +9,7 @@ numpy
 pandas
 scikit-learn
 librosa
+imblearn
 
 # tests/linter
 black
