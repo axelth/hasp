@@ -8,15 +8,17 @@ from sklearn.utils import _safe_indexing
 from sklearn.utils.sparsefuncs import mean_variance_axis
 from imblearn.over_sampling import RandomOverSampler
 
+from hasp.augment_audio import augment_with_method
 from hasp.util import np_pad_wrapper
 
 
 class AugmentingRandomOversampler(RandomOverSampler):
 
-    def __init__(self, random_state=None, augment_method=None):
+    def __init__(self, random_state=None, augment_method=None, **kwargs):
         super().__init__(sampling_strategy='minority',
                          random_state=random_state)
         self.augment_method = augment_method
+        self.kwargs = kwargs
 
     def _fit_resample(self, X, y):
         random_state = check_random_state(self.random_state)
@@ -33,7 +35,7 @@ class AugmentingRandomOversampler(RandomOverSampler):
                 replace=True,
             )
             sample_indices = np.append(sample_indices, bootstrap_indices)
-            
+
             # generate a bootstrap
             ## TODO augment
             X_resampled.append(
@@ -58,5 +60,6 @@ class AugmentingRandomOversampler(RandomOverSampler):
     def _augment_sample(self, samples):
         mask_padding = samples > -2
 
-        return samples[mask_padding]
-        
+        return augment_with_method(samples[mask_padding], 16000,
+                                   self.augment_method, **self.kwargs)
+
