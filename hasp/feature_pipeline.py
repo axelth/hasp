@@ -8,6 +8,7 @@ from sklearn import set_config
 
 set_config(display="diagram")
 from hasp.augmenting_oversampler import AugmentingRandomOversampler as OverSampler
+from hasp.util import np_pad_wrapper
 
 
 def samples_to_mean_mfcc(
@@ -50,6 +51,7 @@ def make_feature_pipeline():
     pipe = Pipeline([("mean_mfcc", mean_mfcc_feat), ("scaler", StandardScaler())])
 
     return pipe
+
 
 def make_oversampled_feature_pipeline():
     padder = FunctionTransformer(
