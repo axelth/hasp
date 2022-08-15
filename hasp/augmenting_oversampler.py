@@ -1,11 +1,7 @@
-from numbers import Real
-from collections.abc import Mapping
 
 import numpy as np
-from scipy import sparse
-from sklearn.utils import check_array, check_random_state
+from sklearn.utils import check_random_state
 from sklearn.utils import _safe_indexing
-from sklearn.utils.sparsefuncs import mean_variance_axis
 from imblearn.over_sampling import RandomOverSampler
 
 from hasp.augment_audio import augment_with_method
@@ -36,8 +32,7 @@ class AugmentingRandomOversampler(RandomOverSampler):
             )
             sample_indices = np.append(sample_indices, bootstrap_indices)
 
-            # generate a bootstrap
-            ## TODO augment
+            # generate a bootstrap augment
             X_resampled.append(
                 np_pad_wrapper(
                      [
@@ -47,7 +42,6 @@ class AugmentingRandomOversampler(RandomOverSampler):
                 )
             )
 
-            #X_resampled.append(_safe_indexing(X, bootstrap_indices))
             y_resampled.append(_safe_indexing(y, bootstrap_indices))
 
         self.sample_indices_ = np.array(sample_indices)
