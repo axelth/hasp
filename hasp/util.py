@@ -17,7 +17,7 @@ def np_pad_wrapper(arrays, max_len=64000):
     arrays: list of arrays or single array
     max_len: number of columns after padding
     '''
-    if len(array) > 1:
+    if len(arrays) > 1:
         return np.vstack(
             tuple(np.pad(arr,
                          pad_width=(0, max_len - len(arr)),
