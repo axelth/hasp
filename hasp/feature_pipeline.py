@@ -51,15 +51,6 @@ def make_feature_pipeline():
 
     return pipe
 
-
-def np_pad_wrapper(arrays, max_len=64000):
-    np.vstack(
-        tuple(np.pad(arr,
-                     pad_width=(0, max_len - len(arr)),
-                     constant_values=-2) for arr in arrays)
-    )
-
-
 def make_oversampled_feature_pipeline():
     padder = FunctionTransformer(
         np_pad_wrapper,

@@ -8,11 +8,13 @@ from sklearn.utils import _safe_indexing
 from sklearn.utils.sparsefuncs import mean_variance_axis
 from imblearn.over_sampling import RandomOverSampler
 
+from hasp.util import np_pad_wrapper
+
 
 class AugmentingRandomOversampler(RandomOverSampler):
 
     def __init__(self, random_state=None, augment_method=None):
-        super().__init__(self, sampling_strategy='minority',
+        super().__init__(sampling_strategy='minority',
                          random_state=random_state)
         self.augment_method = augment_method
 
@@ -34,12 +36,16 @@ class AugmentingRandomOversampler(RandomOverSampler):
             
             # generate a bootstrap
             ## TODO augment
-            # for arr in _safe_indexing(X, bootstrap_indices):
-            #     X_resampled.append(
-            #         self._augment_sample(arr)
-            #     )
-            
-            X_resampled.append(_safe_indexing(X, bootstrap_indices))
+            X_resampled.append(
+                np_pad_wrapper(
+                     [
+                         self._augment_sample(arr)
+                         for arr in _safe_indexing(X, bootstrap_indices)
+                     ]
+                )
+            )
+
+            #X_resampled.append(_safe_indexing(X, bootstrap_indices))
             y_resampled.append(_safe_indexing(y, bootstrap_indices))
 
         self.sample_indices_ = np.array(sample_indices)
