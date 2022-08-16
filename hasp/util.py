@@ -14,13 +14,14 @@ def combine_classes(target_list, pred_arr):
 def np_pad_wrapper(arrays, max_len=64000):
     '''
     Pad array or list of arrays a list of arrays into a regular 2d array padded with -2
+    Arrays longer than max_len are truncated to max_len
     arrays: list of arrays or single array
     max_len: number of columns after padding
     '''
     if len(arrays) > 1:
         return np.vstack(
-            tuple(np.pad(arr,
-                         pad_width=(0, max_len - len(arr)),
+            tuple(np.pad(arr[:max_len],
+                         pad_width=(0, max(max_len - len(arr), 0)),
                          constant_values=-2) for arr in arrays)
         )
     else:

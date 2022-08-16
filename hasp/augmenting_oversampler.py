@@ -10,7 +10,8 @@ from hasp.util import np_pad_wrapper
 
 class AugmentingRandomOversampler(RandomOverSampler):
 
-    def __init__(self, random_state=None, augment_method=None, **kwargs):
+    def __init__(self, random_state=None, augment_method='AddGaussianNoise',
+                 sampling_strategy='not_majority', **kwargs):
         super().__init__(sampling_strategy='minority',
                          random_state=random_state)
         self.augment_method = augment_method
