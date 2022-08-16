@@ -12,10 +12,18 @@ from hasp.util import np_pad_wrapper
 
 
 def samples_to_mean_mfcc(
-    examples, sr=16000, n_fft=512, hop_length=128, fmin=0.0, fmax=8000, **kwargs
-):
-    """The librosa MFCC function can take either an array of audio samples using the keyword argument y=, or an array of spectrograms using the keyword argument S= as its input.
-    However, the pipeline has no way of specifying which argument we are using, so we must define a wrapper function that passes the input in the right way"""
+        examples, sr=16000, n_fft=512, hop_length=128,
+        fmin=0.0, fmax=8000, n_mels=100, **kwargs
+) -> np.ndarray:
+    """
+    Motivation: The librosa MFCC function can take either an array of audio samples
+    using the keyword argument y=, or an array of spectrograms using
+    the keyword argument S= as its input.
+    However, the pipeline has no way of specifying which argument we
+    are using, so we must define a wrapper function that passes
+    the input in the right way
+
+    """
     # to prevent trying to take the lo
     return np.array(
         [
@@ -23,7 +31,7 @@ def samples_to_mean_mfcc(
                 y=sample[sample > -2],
                 sr=sr,
                 n_fft=n_fft,
-                n_mels=100,
+                n_mels=n_mels,
                 hop_length=128,
                 fmin=0.0,
                 fmax=8000,
@@ -46,6 +54,7 @@ def make_feature_pipeline():
             "hop_length": 128,
             "fmin": 0.0,
             "fmax": None,
+            "n_mels": 100,
         },
     )
     pipe = Pipeline([("mean_mfcc", mean_mfcc_feat), ("scaler", StandardScaler())])
@@ -68,6 +77,7 @@ def make_oversampled_feature_pipeline():
             "hop_length": 128,
             "fmin": 0.0,
             "fmax": None,
+            "n_mels": 100,
         },
     )
 
