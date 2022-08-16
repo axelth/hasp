@@ -63,6 +63,13 @@ def make_feature_pipeline():
 
 
 def make_oversampled_feature_pipeline():
+    '''
+    Return and imblearn.pipeline.Pipeline with empty slots for oversampler and
+    estimator.
+    After creating the pipeline, use
+       pipe.set_params(over_sampler=.., estimator=..)
+    to finish it.
+    '''
     padder = FunctionTransformer(
         np_pad_wrapper,
         kw_args={'max_len': 64000}
@@ -84,10 +91,11 @@ def make_oversampled_feature_pipeline():
     pipe = ImPipeline(
         [
             ('pad', padder),
-            ("over_sampler", OverSampler()),
+            ("over_sampler", None),
             ("mean_mfcc", mean_mfcc_feat),
             ("scaler", StandardScaler()),
             ('estimator', None)
         ]
     )
+    print('Use pipe.set_params(over_sampler=.., estimator=..) to finish the pipeline')
     return pipe
