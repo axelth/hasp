@@ -20,7 +20,7 @@ def samples_to_mean_mfcc(
     return np.array(
         [
             mfcc(
-                y=sample,
+                y=sample[sample > -2],
                 sr=sr,
                 n_fft=n_fft,
                 n_mels=100,
@@ -73,10 +73,11 @@ def make_oversampled_feature_pipeline():
 
     pipe = ImPipeline(
         [
-            ('pad', padder)
+            ('pad', padder),
             ("over_sampler", OverSampler()),
             ("mean_mfcc", mean_mfcc_feat),
             ("scaler", StandardScaler()),
+            ('estimator', None)
         ]
     )
     return pipe
