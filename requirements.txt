@@ -9,24 +9,24 @@ numpy
 pandas
 scikit-learn
 librosa
-audiomentation
+audiomentations
 imblearn
 
 # tests/linter
-black
-coverage
-flake8
-pytest
-yapf
+# black
+# coverage
+# flake8
+# pytest
+# yapf
 
 # API
-gcsfs
-google-cloud-storage
-mlflow
+# gcsfs
+# google-cloud-storage
+# mlflow
 
 
 # utilities
 six>=1.14
 joblib
 memoized-property
-termcolor
+# termcolor

@@ -10,6 +10,16 @@ setup(name='hasp',
       description="Project Description",
       packages=find_packages(),
       install_requires=requirements,
+      extras_require={
+          'dev': [
+              'black',
+              'coverage',
+              'flake8',
+              'pytest',
+              'yapf',
+              'mlflow',
+          ]
+      },
       test_suite='tests',
       # include_package_data: to install data from MANIFEST.in
       include_package_data=True,

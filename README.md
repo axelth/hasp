@@ -22,7 +22,7 @@ cd hasp
 and install the project in either development mode
 
 ```bash
-pip install -e .
+pip install -e '.[dev]'
 ```
 
 or as a regular package.
