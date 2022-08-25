@@ -23,7 +23,7 @@ imblearn
 # gcsfs
 # google-cloud-storage
 # mlflow
-
+streamlit
 
 # utilities
 six>=1.14
