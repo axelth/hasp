@@ -3,8 +3,8 @@ import streamlit as st
 import os
 import random
 import librosa
-# To do: import classifer method
-#from hasp.model import classifer
+from hasp.predict import SoundClassifier
+
 
 # Page Title
 st.write('# Classify Sound')
@@ -45,16 +45,32 @@ label_dict = {
 #   4. extract [samples].sample points
 #   5. call classifier.classify
 def load_and_predict(class_no: int):
-    audio_dir = f"./examples/class_{class_no}/"
+    audio_dir = f"./hasp/examples/class_{class_no}/"
     audio_file = random.choice(os.listdir(audio_dir))
-    y, sr = librosa.load(audio_file)
+    audio_path = f'{audio_dir}/{audio_file}'
 
-    if sr < samples:
-        while True:
-            audio_file = random.choice(os.listdir(audio_dir))
-            y, sr = librosa.load(audio_file)
+    # load audiofile: specify sample rate
+    y, sr = librosa.load(audio_path, sr=16000)
 
-    return
+    # loop until we've chosen a file that is long enough
+    while y.shape[0] < samples:
+        audio_file = random.choice(os.listdir(audio_dir))
+        y, sr = librosa.load(audio_path, sr=16000)
+
+    audio_playback(audio_path)
+
+    # find a random starting point
+    start = random.randrange(0, max(1, y.shape[0] - samples))
+
+    pred_result = test.classify(y[start:start+samples])
+
+    return pred_result
+
+def audio_playback(path: str):
+   audio_path_open = open(path, "rb")
+   audio_bytes = audio_path_open.read()
+   st.write("## Audio Playback")
+   st.audio(audio_bytes)
 
 # Buttons with labels, one for each class
 # Click to classify an audil file
@@ -62,21 +78,22 @@ cols = st.columns(5)
 for i, col in enumerate(cols):
     with col:
         st.button(label_dict[f'class_{i}'],
-                  key=f'class_{i}',
-                  on_click=load_and_predict(i),
-                  args=(0,))
+                  key=f'class_{i}')
 
 cols = st.columns(5)
 for i, col in enumerate(cols):
     with col:
         st.button(label_dict[f'class_{i+5}'],
-                  key=f'class_{i+5}',
-                  on_click=load_and_predict,
-                  args=(0,))
+                  key=f'class_{i+5}')
 
-# Classification result display
-ret_class = 0
-if ret_class == 1:
-    st.write("## DANGER")
-else:
-    st.write("## SAFE")
+# Instanciate SoundClassifer()
+test = SoundClassifier()
+
+# Display classification result
+for i in range(10):
+    if st.session_state[f'class_{i}']:
+        pred_result = load_and_predict(i)
+        if pred_result == 1:
+            st.write("## DANGER")
+        else:
+           st.write("## SAFE")
