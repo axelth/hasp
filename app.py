@@ -5,21 +5,12 @@ import random
 import librosa
 from hasp.predict import SoundClassifier
 
+if 'classifier' not in st.session_state:
+    st.session_state['classifier'] = SoundClassifier()
 
 # Page Title
 st.write('# Classify Sound')
 
-# Sample Length Slider
-# Adjust how many samples to take from the audio file
-# file name example: class_1_0_7.wav /hasp/example.
-time = st.slider(
-    label = 'How many samples to take from audio file?\
-        The slidebar is second scale from 0.2 to 4.0 sec.',
-    min_value = 0.2,
-    max_value = 4.0,
-    step = 0.1)
-samples = int(time * 16000)
-st.write('Samples:', samples)
 
 label_dict = {
     'class_0': 'air_conditioner',
@@ -53,16 +44,10 @@ def load_and_predict(class_no: int):
     y, sr = librosa.load(audio_path, sr=16000)
 
     # loop until we've chosen a file that is long enough
-    while y.shape[0] < samples:
-        audio_file = random.choice(os.listdir(audio_dir))
-        y, sr = librosa.load(audio_path, sr=16000)
-
     audio_playback(audio_path)
 
     # find a random starting point
-    start = random.randrange(0, max(1, y.shape[0] - samples))
-
-    pred_result = test.classify(y[start:start+samples])
+    pred_result = st.session_state['classifier'].classify(y)
 
     return pred_result
 
@@ -85,9 +70,6 @@ for i, col in enumerate(cols):
     with col:
         st.button(label_dict[f'class_{i+5}'],
                   key=f'class_{i+5}')
-
-# Instanciate SoundClassifer()
-test = SoundClassifier()
 
 # Display classification result
 for i in range(10):
