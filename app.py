@@ -3,6 +3,8 @@ import streamlit as st
 import os
 import random
 import librosa
+import librosa.display
+import matplotlib.pyplot as plt
 from hasp.predict import SoundClassifier
 
 # initialize classifier model
@@ -95,6 +97,15 @@ for i in range(10):
 if 'audio_to_play' in st.session_state:
     audio_playback(st.session_state['audio_to_play'],
                    st.session_state['class_no'])
+    fig, ax = plt.subplots(figsize=(10, 3))
+    librosa.display.specshow(
+        librosa.feature.mfcc(
+            y=st.session_state['audio_to_predict'],
+            n_mfcc=13, n_fft=256, hop_length=128, n_mels=97),
+        sr=16000,
+        ax=ax
+    )
+    st.pyplot(fig)
 
 if st.session_state['audio_to_predict'] is not None:
     if st.session_state.get('btn_classify', None):
