@@ -9,6 +9,7 @@ numpy
 pandas
 scikit-learn==1.1.1
 librosa
+matplotlib
 audiomentations
 imblearn
 
