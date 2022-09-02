@@ -114,7 +114,7 @@ if st.session_state['audio_to_predict'] is not None:
         )
         st.session_state['prediction'] = pred_result
     if st.session_state['prediction'] is None:
-        st.button('Do classification', key='btn_classify')
+        st.button('Classify', key='btn_classify')
     else:
         if st.session_state['prediction'] == 1:
             st.write("## DANGER")
